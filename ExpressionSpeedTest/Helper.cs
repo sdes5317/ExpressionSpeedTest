@@ -49,6 +49,31 @@ public class Helper
         //Console.WriteLine(assign);
         return Expression.Lambda<Action<TInstance, TNewPropertyValue>>(assign, instance, b).Compile();
     }
+    private static Action<object, object> _setMethodTemp;
+    public static void SetValueWithTemp<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    {
+        if (_setMethodTemp is null)
+        {
+            _setMethodTemp += GetSetMethod3<TInstance, TNewPropertyValue>(propertyInfo);
+        }
+        _setMethodTemp(propObject, newValue);
+    }
+
+    private static Action<object, object> GetSetMethod3<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo)
+    {
+        var a = Expression.Parameter(typeof(object), "a");
+        var b = Expression.Parameter(typeof(object), "b");
+        var castA = Expression.Convert(a, typeof(TInstance));
+        var castB = Expression.Convert(b, typeof(TNewPropertyValue));
+        var call = Expression.Call(castA, propertyInfo.GetSetMethod(), castB);
+        //Console.WriteLine(call);
+        return Expression.Lambda<Action<object, object>>(call, a, b).Compile();
+    }
+
+    public static void SetValueWithRefleaction<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    {
+        propertyInfo.SetValue(propObject, newValue);
+    }
 
     public static int Add(int a, int b)
     {
