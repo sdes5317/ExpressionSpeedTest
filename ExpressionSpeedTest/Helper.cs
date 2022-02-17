@@ -50,13 +50,22 @@ public class Helper
         return Expression.Lambda<Action<TInstance, TNewPropertyValue>>(assign, instance, b).Compile();
     }
     private static Action<object, object> _setMethodTemp;
-    public static void SetValueWithTemp<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    public static void SetValueByTempCache<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
     {
         if (_setMethodTemp is null)
         {
             _setMethodTemp += GetSetMethod3<TInstance, TNewPropertyValue>(propertyInfo);
         }
         _setMethodTemp(propObject, newValue);
+    }
+    private static dynamic _setMethodDynamic;
+    public static void SetValueByCacheDynamic<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    {
+        if (_setMethodDynamic is null)
+        {
+            _setMethodDynamic += GetSetMethod2<TInstance, TNewPropertyValue>(propertyInfo);
+        }
+        _setMethodDynamic(propObject, newValue);
     }
 
     private static Action<object, object> GetSetMethod3<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo)
@@ -70,9 +79,18 @@ public class Helper
         return Expression.Lambda<Action<object, object>>(call, a, b).Compile();
     }
 
-    public static void SetValueWithRefleaction<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    public static void SetValueByRefleaction<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
     {
         propertyInfo.SetValue(propObject, newValue);
+    }
+    private static dynamic _reflectionSetter;
+    public static void SetValueByRefleactionCache<TInstance, TNewPropertyValue>(PropertyInfo propertyInfo, TInstance propObject, TNewPropertyValue newValue)
+    {
+        if (_reflectionSetter is null)
+        {
+            _reflectionSetter = propertyInfo.GetValueSetter<TInstance>();
+        }
+        _reflectionSetter(propObject, newValue);
     }
 
     public static int Add(int a, int b)
@@ -82,7 +100,9 @@ public class Helper
 
         var body = Expression.AddAssign(parameterA, parameterB);
         Console.WriteLine(body);
-        var methodAdd = Expression.Lambda<Func<int, int, int>>(body, parameterA, parameterB).Compile();
+        //var methodAdd = Expression.Lambda<Func<int, int, int>>(body, parameterA, parameterB).Compile();
+        Expression<Func<int, int, int>> methodAddEx = (a, b) => a + b;
+        var methodAdd = methodAddEx.Compile();
 
         return methodAdd(a, b);
     }

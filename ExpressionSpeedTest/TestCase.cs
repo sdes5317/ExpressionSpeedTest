@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Running;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ namespace ExpressionSpeedTest
     public class TestCase
     {
         static Person person = new Person() { Name = "a" };
+
+        private readonly int _numbers = 1000;
+
         public TestCase()
         {
 
@@ -37,49 +41,100 @@ namespace ExpressionSpeedTest
             Console.WriteLine(Helper.Add(1, 7));
         }
         [Benchmark]
-        public void SetWithExpression1()
+        public void SetByExpressionNoCache1()
         {
             var info = person.GetType().GetProperty("Name");
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < _numbers; i++)
             {
                 Helper.SetValue(info, person, "777");
             }
         }
-        [Benchmark]
-        public void SetWithExpression2()
+        //[Benchmark]
+        public void SetByExpressionNoCache2()
         {
             var info = person.GetType().GetProperty("Name");
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < _numbers; i++)
             {
                 Helper.SetValue2(info, person, "888");
             }
         }
         [Benchmark]
-        public void SetWithExpressionAndTemp()
+        public void SetByExpressionAndCache()
         {
             var info = person.GetType().GetProperty("Name");
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < _numbers; i++)
             {
-                Helper.SetValueWithTemp(info, person, "888");
+                Helper.SetValueByTempCache(info, person, "888");
             }
         }
         [Benchmark]
-        public void SetWithReflection()
+        public void SetByExpressionAndCacheDynamic()
         {
             var info = person.GetType().GetProperty("Name");
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < _numbers; i++)
             {
-                Helper.SetValueWithRefleaction(info, person, "888");
+                Helper.SetValueByCacheDynamic(info, person, "888");
+            }
+        }
+        [Benchmark]
+        public void SetByReflection()
+        {
+            var info = person.GetType().GetProperty("Name");
+
+            for (int i = 0; i < _numbers; i++)
+            {
+                Helper.SetValueByRefleaction(info, person, "888");
+            }
+        }
+        [Benchmark]
+        public void SetByReflectionCache()
+        {
+            var info = person.GetType().GetProperty("Name");
+
+            for (int i = 0; i < _numbers; i++)
+            {
+                Helper.SetValueByRefleactionCache(info, person, "888");
+            }
+        }
+        [Benchmark]
+        public void SetByNormal()
+        {
+            for (int i = 0; i < _numbers; i++)
+            {
+                person.Name = "888";
             }
         }
 
         public static void TestBenchMark()
         {
             BenchmarkRunner.Run<TestCase>();
+        }
+
+        public static void TestStopWatch()
+        {
+            var test = new TestCase();
+            var stopWatch = new Stopwatch();
+            Console.WriteLine("no cache");
+            stopWatch.Start();
+            test.SetByExpressionNoCache1();
+            stopWatch.Stop();
+            Console.WriteLine(stopWatch.ElapsedMilliseconds);
+            
+            Console.WriteLine(nameof(SetByExpressionAndCache));
+            stopWatch.Restart();
+            test.SetByExpressionAndCache();
+            stopWatch.Stop();
+            Console.WriteLine(stopWatch.ElapsedMilliseconds);
+
+            Console.WriteLine(nameof(SetByReflection));
+            stopWatch.Restart();
+            test.SetByReflection();
+            stopWatch.Stop();
+            Console.WriteLine(stopWatch.ElapsedMilliseconds);
         }
     }
 }

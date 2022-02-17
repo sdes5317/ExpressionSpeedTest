@@ -4,3 +4,4 @@ using ExpressionSpeedTest;
 Console.WriteLine("It's a speed test for set ");
 
 TestCase.TestBenchMark();
+//TestCase.TestStopWatch();
