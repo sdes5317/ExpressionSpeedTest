@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Linq.Expressions;
 using System.Reflection;
+using AutoMapper;
+
 /// <summary>
 /// 練習實作Expression
 /// </summary>
@@ -107,4 +109,18 @@ public class Helper
         return methodAdd(a, b);
     }
 
+    private static IMapper _mapper;
+    public static void SetValueByAutoMapper<TInstance, TNewInstance>(TInstance propObject, TNewInstance newValue)
+    {
+        if (_mapper is null)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TInstance, TNewInstance>();
+            });
+            _mapper = config.CreateMapper();
+        }
+
+        _mapper.Map(newValue, propObject);
+    }
 }

@@ -108,6 +108,16 @@ namespace ExpressionSpeedTest
                 person.Name = "888";
             }
         }
+        [Benchmark]
+        public void SetByAutoMapper()
+        {
+            var personForAutoMapper = new Person() { Name = "888" };
+
+            for (int i = 0; i < _numbers; i++)
+            {
+                Helper.SetValueByAutoMapper(person, personForAutoMapper);
+            }
+        }
 
         public static void TestBenchMark()
         {
