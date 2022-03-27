@@ -4,14 +4,15 @@
 ## 測試結果  
 針對某個物件單個屬性做1000次的set  
 
-|                                                              Method |          Mean |         Error |        StdDev |
-|-------------------------------------------------------------------- |--------------:|--------------:|--------------:|
-|                                 SetByExpressionNoCache1(Expression) | 59,979.196 us | 1,172.8174 us | 1,682.0197 us |
-|        SetByExpressionAndCache(Expression+Action<object,obejct快取>) |      5.934 us |     0.0749 us |     0.0701 us |
-|               SetByExpressionAndCacheDynamic(Expression+dynamic快取) |     21.512 us |     0.4273 us |     1.1552 us |
-|                                                SetByReflection(反射) |    102.137 us |     2.0101 us |     3.7259 us |
-|                                      SetByReflectionCache(反射+快取) |     20.433 us |     0.4069 us |     0.6686 us |
-|                                           SetByNormal(正常用等號賦值) |      1.972 us |     0.0234 us |     0.0207 us |
+|                                                              Method |            Mean |         Error |        StdDev |
+|-------------------------------------------------------------------- |----------------:|--------------:|--------------:|
+|                                 SetByExpressionNoCache1(Expression) |  106,845.943 us | 1,280.4211 us | 1,197.7067 us |
+|        SetByExpressionAndCache(Expression+Action<object,obejct快取>) |       5.854 us |     0.0225 us |     0.0210 us |
+|               SetByExpressionAndCacheDynamic(Expression+dynamic快取) |      20.272 us |     0.3530 us |     0.3302 us |
+|                                                SetByReflection(反射) |      95.591 us |     0.5307 us |     0.4704 us |
+|                                      SetByReflectionCache(反射+快取) |      20.019 us |     0.1480 us |     0.1385 us |
+|                                           SetByNormal(正常用等號賦值) |       2.345 us |     0.0302 us |     0.0283 us |
+|                                          SetByAutoMapper(快取Config) |      98.107 us |     0.3259 us |     0.2889 us |
 
   Mean   : Arithmetic mean of all measurements  
   Error  : Half of 99.9% confidence interval  
