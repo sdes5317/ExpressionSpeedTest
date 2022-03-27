@@ -1,5 +1,7 @@
 # ExpressionSpeedTest
-測試set方法透過Expression與其他方法的效能比較
+由於在某個專案有動態賦值的需求  
+故針對`使用Expression產生指定屬性的Set方法去賦值`  
+與其他方法去做效能比較  
 
 ## 測試結果  
 針對某個物件單個屬性做1000次的set  
