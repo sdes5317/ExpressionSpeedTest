@@ -15,6 +15,8 @@
 |                                      SetByReflectionCache(反射+快取) |      20.019 us |     0.1480 us |     0.1385 us |
 |                                           SetByNormal(正常用等號賦值) |       2.345 us |     0.0302 us |     0.0283 us |
 |                                          SetByAutoMapper(快取Config) |      98.107 us |     0.3259 us |     0.2889 us |
+|                                             SetByAutoMapperNoCache | 540,005.463 us | 10,789.4869 us | 10,596.7188 us |
+|                                                    SetByJsonDotNet |   1,567.006 us |     29.5987 us |     31.6703 us |
 
   Mean   : Arithmetic mean of all measurements  
   Error  : Half of 99.9% confidence interval  
