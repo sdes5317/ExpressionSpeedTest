@@ -118,6 +118,26 @@ namespace ExpressionSpeedTest
                 Helper.SetValueByAutoMapper(person, personForAutoMapper);
             }
         }
+        [Benchmark]
+        public void SetByAutoMapperNoCache()
+        {
+            var personForAutoMapper = new Person() { Name = "888" };
+
+            for (int i = 0; i < _numbers; i++)
+            {
+                Helper.SetValueByAutoMapperNoCache(person, personForAutoMapper);
+            }
+        }
+        [Benchmark]
+        public void SetByJsonDotNet()
+        {
+            var personForAutoMapper = new Person() { Name = "888" };
+
+            for (int i = 0; i < _numbers; i++)
+            {
+                Helper.SetValueByJsonDotNet(person, personForAutoMapper);
+            }
+        }
 
         public static void TestBenchMark()
         {

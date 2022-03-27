@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper;
+using Newtonsoft.Json;
 
 /// <summary>
 /// 練習實作Expression
@@ -122,5 +123,19 @@ public class Helper
         }
 
         _mapper.Map(newValue, propObject);
+    }
+    public static void SetValueByAutoMapperNoCache<TInstance, TNewInstance>(TInstance propObject, TNewInstance newValue)
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<TInstance, TNewInstance>();
+        });
+        _mapper = config.CreateMapper();
+
+        _mapper.Map(newValue, propObject);
+    }
+    public static void SetValueByJsonDotNet<TInstance, TNewInstance>(TInstance propObject, TNewInstance newValue)
+    {
+        propObject = JsonConvert.DeserializeObject<TInstance>(JsonConvert.SerializeObject(newValue));
     }
 }
